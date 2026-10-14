@@ -71,7 +71,7 @@ def render():
                 f"<div class='evq'>{q}</div><div class='evd'>{det}</div></div>")
 
     pos_rows = []
-    for tid, p in sorted(pos.values(), key=lambda x: -x["cost"]):
+    for tid, p in sorted(pos.items(), key=lambda kv: -kv[1]["cost"]):
         lp_ = p.get("last_price") or p["avg_price"]
         u = (lp_ - p["avg_price"]) * p["shares"]
         badge = "COPY" if p.get("book") == "copy" else "MUSE"
