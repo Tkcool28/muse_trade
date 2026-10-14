@@ -4,7 +4,7 @@ Paper-only Polymarket trading system run by Muse, racing Terry's mechanical
 Polycopy bot on identical terms: **$200 fixed bankroll, no replenishment,
 real fees modeled on every fill.**
 
-📊 **Live dashboard:** https://tkcool28.github.io/muse_trade/dashboard.html
+📊 **Live dashboard:** https://tkcool28.github.io/muse_trade/
 
 ## The bet
 Two halves, $100 each:
