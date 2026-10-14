@@ -1,39 +1,82 @@
 <!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Poly LLM — paper</title><style>
-body{background:#0d1117;color:#e6edf3;font-family:system-ui,sans-serif;margin:0;padding:12px;max-width:640px}
-h2{font-size:15px;color:#8b949e;margin:18px 0 8px;text-transform:uppercase;letter-spacing:.5px}
-.card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin-bottom:10px}
-.big{font-size:30px;font-weight:700}.pos{color:#3fb950}.neg{color:#f85149}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.k{font-size:11px;color:#8b949e}.v{font-size:17px;font-weight:600}
-.ev,.pos,.wrow{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:8px;margin-bottom:6px;font-size:13px}
-.evh{display:flex;justify-content:space-between;gap:6px;align-items:center}
-.evq{color:#c9d1d9;margin:3px 0}.evd{color:#8b949e;font-size:12px}
-.rsn{color:#a5d6ff;font-style:italic;margin-top:3px;font-size:12px}
-.wln{color:#8b949e;font-size:11px}
-.tag{background:#21262d;border:1px solid #30363d;border-radius:4px;padding:1px 6px;font-size:10px;color:#8b949e}
-.halt{background:#3d1113;border:1px solid #f85149;border-radius:8px;padding:10px;margin-bottom:10px}
-.ft{color:#6e7681;font-size:11px;margin-top:16px;text-align:center}
+*{box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:system-ui,-apple-system,sans-serif;
+margin:0;padding:14px;font-size:15px;line-height:1.45;max-width:680px;margin-left:auto;margin-right:auto}
+h1{font-size:17px;margin:2px 0 12px;color:#e6edf3}
+h2{font-size:13px;color:#8b949e;margin:22px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+.hero{background:linear-gradient(160deg,#161b22,#1a2332);border:1px solid #30363d;
+border-radius:14px;padding:18px 16px;margin-bottom:12px}
+.hero .k{font-size:12px;color:#8b949e;text-transform:uppercase;letter-spacing:.6px}
+.hero .big{font-size:38px;font-weight:800;margin:4px 0 10px}
+.herorow{display:flex;gap:10px}
+.herostat{flex:1;min-width:0;background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:10px 12px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{min-width:0;background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px 14px}
+.tile .k{font-size:12px;color:#8b949e;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .v{font-size:21px;font-weight:700}
+.books{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.book{min-width:0;background:#161b22;border:1px solid #30363d;border-radius:12px;padding:12px 14px}
+.book h3{margin:0 0 8px;font-size:14px}
+.book .pnl{font-size:22px;font-weight:700;margin-bottom:6px}
+.pos{color:#3fb950}.neg{color:#f85149}
+.ev,.pcard,.wrow{background:#161b22;border:1px solid #30363d;border-radius:10px;
+padding:10px 12px;margin-bottom:8px}
+.evh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ev .t{color:#8b949e;font-size:12px;white-space:nowrap}
+.evq{margin:5px 0 3px;font-size:14px}
+.evd{color:#8b949e;font-size:13px}
+.px{font-size:13px;color:#c9d1d9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rsn{color:#a5d6ff;font-style:italic;margin-top:4px;font-size:13px}
+.wln{color:#8b949e;font-size:12px}
+.wn{font-weight:600;font-size:15px}
+.tag{display:inline-block;background:#21262d;border:1px solid #30363d;border-radius:5px;
+padding:2px 7px;font-size:11px;color:#8b949e;white-space:nowrap}
+.bcopy{color:#79c0ff;border-color:#1f6feb}
+.bmuse{color:#d2a8ff;border-color:#8957e5}
+.halt{background:#3d1113;border:1px solid #f85149;border-radius:10px;padding:12px;margin-bottom:12px;font-size:14px}
+details{margin-top:6px}
+summary{color:#8b949e;font-size:14px;cursor:pointer;padding:8px 0}
+.empty{color:#6e7681;font-size:14px;padding:6px 0}
+.ft{color:#6e7681;font-size:12px;margin:22px 0 8px;text-align:center}
 </style></head><body>
-<h2>🎯 Poly LLM · paper · updated 2026-10-14 17:21</h2>
-<div class="card"><div class="k">TOTAL EQUITY (bank + sweep)</div>
-<div class="big"><span class="pos">$189.74</span></div>
-<div class="grid" style="margin-top:8px">
-<div><div class="k">Bank equity</div><div class="v"><span class="pos">$189.74</span></div></div>
-<div><div class="k">Sweep account</div><div class="v"><span class="pos">$0.00</span></div></div>
-<div><div class="k">Free cash</div><div class="v"><span class="pos">$189.74</span></div></div>
-<div><div class="k">Tied up</div><div class="v"><span class="pos">$0.00</span></div></div>
-<div><div class="k">Realized P&L</div><div class="v"><span class="pos">$0.00</span></div></div>
-<div><div class="k">Unrealized</div><div class="v"><span class="pos">$0.00</span></div></div>
-<div><div class="k">Fees paid</div><div class="v"><span class="neg">$-0.26</span></div></div>
-<div><div class="k">Copy / Muse realized</div><div class="v"><span class="pos">$0.00</span> / <span class="pos">$0.00</span></div></div>
+<h1>🎯 Poly LLM · paper · <span style="color:#8b949e;font-weight:400">2026-10-14 17:30</span></h1>
+
+<div class="hero"><div class="k">Total equity (bank + sweep)</div>
+<div class="big"><span class="pos">$200.00</span></div>
+<div class="herorow">
+<div class="herostat"><div class="k">Bank</div><div style="font-size:19px;font-weight:700"><span class="pos">$200.00</span></div></div>
+<div class="herostat"><div class="k">Sweep acct</div><div style="font-size:19px;font-weight:700"><span class="pos">$0.00</span></div></div>
 </div></div>
-<h2>Open positions (0)</h2>
-<div class='evd'>none</div>
+
+<div class="tiles">
+<div class="tile"><div class="k">Free cash</div><div class="v"><span class="pos">$189.74</span></div></div>
+<div class="tile"><div class="k">Tied up</div><div class="v"><span class="pos">$10.26</span></div></div>
+<div class="tile"><div class="k">Realized P&amp;L</div><div class="v"><span class="pos">$0.00</span></div></div>
+<div class="tile"><div class="k">Unrealized</div><div class="v"><span class="pos">$0.00</span></div></div>
+<div class="tile"><div class="k">Fees paid</div><div class="v"><span class="neg">-$0.26</span></div></div>
+<div class="tile"><div class="k">Swept total</div><div class="v"><span class="pos">$0.00</span></div></div>
+</div>
+
+<h2>The two books</h2>
+<div class="books">
+<div class="book"><h3>📋 Copy <span class="tag">mechanical</span></h3>
+<div class="pnl"><span class="pos">$0.00</span></div>
+<div class="evd">1 open · <span class="pos">$10.26</span> tied</div></div>
+<div class="book"><h3>🧠 Muse <span class="tag">discretionary</span></h3>
+<div class="pnl"><span class="pos">$0.00</span></div>
+<div class="evd">0 open · <span class="pos">$0.00</span> tied</div></div>
+</div>
+
+<h2>Open positions (1)</h2>
+<div class='pcard'><div class='evh'><span class='tag bcopy'>COPY</span><span class='px'>Yes @ 0.500 → 0.500</span><span><span class="pos">$0.00</span></span></div><div class='evq'>Q?</div><div class='evd'>20.0 shares · in $<span class="pos">$10.26</span></div></div>
+
 <h2>Wallets copied</h2>
-<div class='wrow'><div class='evh'><span>Jsram</span><span class='tag'>active</span></div><div class='evd'>copied 0 · P&L <span class="pos">$0.00</span></div></div><div class='wrow'><div class='evh'><span>0x361b16e3ddfe1d415d41008daac2631d94ab74fe</span><span class='tag'>active</span></div><div class='evd'>copied 0 · P&L <span class="pos">$0.00</span></div></div><div class='wrow'><div class='evh'><span>Tokor</span><span class='tag'>active</span></div><div class='evd'>copied 0 · P&L <span class="pos">$0.00</span></div></div><div class='wrow'><div class='evh'><span>Wiretransferxyz</span><span class='tag'>active</span></div><div class='evd'>copied 0 · P&L <span class="pos">$0.00</span></div></div>
+<div class='wrow'><div class='evh'><span class='wn'>Jsram</span><span class='tag'>active</span></div><div class='evd'>soccer combo parlays (daily)</div><div class='evh' style='margin-top:4px'><span class='evd'>copied 0</span><span>P&L <span class="pos">$0.00</span></span></div></div><div class='wrow'><div class='evh'><span class='wn'>0x361b16e3ddfe1d4…</span><span class='tag'>active</span></div><div class='evd'>soccer singles + exact scores</div><div class='evh' style='margin-top:4px'><span class='evd'>copied 0</span><span>P&L <span class="pos">$0.00</span></span></div></div><div class='wrow'><div class='evh'><span class='wn'>Tokor</span><span class='tag'>active</span></div><div class='evd'>short-dated crypto/oil price levels</div><div class='evh' style='margin-top:4px'><span class='evd'>copied 0</span><span>P&L <span class="pos">$0.00</span></span></div></div><div class='wrow'><div class='evh'><span class='wn'>Wiretransferxyz</span><span class='tag'>active</span></div><div class='evd'>esports match markets</div><div class='evh' style='margin-top:4px'><span class='evd'>copied 0</span><span>P&L <span class="pos">$0.00</span></span></div></div>
+
 <h2>Recent activity</h2>
-<div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>halt</span></div><div class='evq'></div><div class='evd'>equity $150.00 < $160 drawdown halt</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>sweep</span></div><div class='evq'></div><div class='evd'>swept $25.0</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>settle</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>LOSS <span class="neg">$-5.13</span></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>settle</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$4.87</span></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>close</span> <span class=tag>MUSE</span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$0.75</span></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>MUSE</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13<div class='rsn'>test</div></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>halt</span></div><div class='evq'></div><div class='evd'>equity $150.00 < $160 drawdown halt</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>sweep</span></div><div class='evq'></div><div class='evd'>swept $25.0</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>settle</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>LOSS <span class="neg">$-5.13</span></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>settle</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$4.87</span></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>close</span> <span class=tag>MUSE</span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$0.75</span></div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>MUSE</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13</div></div><div class='ev'><div class='evh'><span>10-14 16:34</span><span class='tag'>fill</span> <span class=tag>COPY</span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) fee $0.13<div class='rsn'>test</div></div></div>
-<div class="ft">Paper only · fees modeled per fill · sweeps at $25 · kill: -20% halt / 60-day review</div>
+<div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>halt</span> </span></div><div class='evq'></div><div class='evd'>equity $150.00 < $160 drawdown halt</div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>sweep</span> </span></div><div class='evq'></div><div class='evd'>swept $25.00 → sweep account</div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>settle</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>LOSS <span class="neg">-$5.13</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>settle</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$4.87</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>close</span> <span class='tag bmuse'>MUSE</span></span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$0.75</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>fill</span> <span class='tag bmuse'>MUSE</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div>
+<details><summary>Older activity (23)</summary><div class='ev'><div class='evh'><span class='t'>10-14 17:30</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13<div class='rsn'>test</div></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>halt</span> </span></div><div class='evq'></div><div class='evd'>equity $150.00 < $160 drawdown halt</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>sweep</span> </span></div><div class='evq'></div><div class='evd'>swept $25.00 → sweep account</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>settle</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>LOSS <span class="neg">-$5.13</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>settle</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$4.87</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>close</span> <span class='tag bmuse'>MUSE</span></span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$0.75</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bmuse'>MUSE</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13<div class='rsn'>test</div></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>halt</span> </span></div><div class='evq'></div><div class='evd'>equity $150.00 < $160 drawdown halt</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>sweep</span> </span></div><div class='evq'></div><div class='evd'>swept $25.00 → sweep account</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>settle</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>LOSS <span class="neg">-$5.13</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>settle</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$4.87</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>close</span> <span class='tag bmuse'>MUSE</span></span></div><div class='evq'>Q?</div><div class='evd'>WIN <span class="pos">$0.75</span></div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bmuse'>MUSE</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13</div></div><div class='ev'><div class='evh'><span class='t'>10-14 16:34</span><span><span class='tag'>fill</span> <span class='tag bcopy'>COPY</span></span></div><div class='evq'>Q?</div><div class='evd'>BUY Yes @ 0.5 ($5.0) · fee $0.13<div class='rsn'>test</div></div></div></details>
+<div class="ft">Paper only · fees modeled per fill · $25 sweeps · kill: −20% halt / 60-day review</div>
 </body></html>
