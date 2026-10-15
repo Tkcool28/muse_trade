@@ -18,11 +18,13 @@ import dashboard  # noqa: E402
 
 def main():
     t0 = time.time()
-    out = {"ok": True, "events": [], "ts": int(t0)}
+    out = {"ok": True, "events": [], "skips": [], "ts": int(t0)}
     try:
         s = load_state()
         out["events"].extend(run_settle(s))
-        out["events"].extend(run_copy(s))
+        copy_events, copy_skips = run_copy(s)
+        out["events"].extend(copy_events)
+        out["skips"] = copy_skips  # filter notes; never wake on these
         c = scan()
         out["candidates"] = {k: len(v) for k, v in c.items()
                              if isinstance(v, list)}
