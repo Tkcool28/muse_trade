@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792048552,
+   "watermark": 1792051511,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -38,7 +38,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792048949,
+   "watermark": 1792051973,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
@@ -54,7 +54,7 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792045408,
+   "watermark": 1792052309,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
