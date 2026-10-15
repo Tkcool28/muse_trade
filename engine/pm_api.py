@@ -36,6 +36,19 @@ def gamma_market_by_id(mid):
     return _get(f"{GAMMA}/markets/{mid}")
 
 
+def gamma_market_by_condition(condition_id):
+    """Exact market lookup by condition_id.
+
+    NOTE (2026-10-15): the Gamma /markets endpoint silently IGNORES the
+    singular `condition_id` query param — it returns unrelated markets
+    (e.g. "Xi Jinping out before 2027?" for an esports condition_id),
+    which corrupted position metadata and nearly settled a position against
+    the wrong market. The plural `condition_ids` is the working filter.
+    """
+    ms = gamma_markets({"condition_ids": str(condition_id), "limit": 1})
+    return ms[0] if ms else None
+
+
 def gamma_search(query, limit=10):
     return _get(f"{GAMMA}/public-search", {"q": query, "limit": limit})
 

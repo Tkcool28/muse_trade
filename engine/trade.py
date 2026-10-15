@@ -11,7 +11,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from pm_api import gamma_markets  # noqa: E402
+from pm_api import gamma_market_by_condition  # noqa: E402
 from ledger import load_state, buy, sell, equity, MAX_TRADE_USD  # noqa: E402
 import dashboard  # noqa: E402
 
@@ -20,14 +20,22 @@ CAND = os.path.join(ROOT, "state", "candidates.json")
 
 
 def resolve(cond, token):
-    ms = gamma_markets({"condition_id": cond, "limit": 1})
-    if not ms:
-        return None, "market not found"
-    m = ms[0]
+    # Fail-closed: the token must be one of the market's own clobTokenIds.
+    # (2026-10-15: singular `condition_id` query param was silently ignored
+    # by Gamma, resolving to an unrelated market and labeling foreign tokens
+    # "No" — caught and voided same day.)
     try:
-        tids = json.loads(m.get("clobTokenIds") or "[]")
+        m = gamma_market_by_condition(cond)
+    except RuntimeError:
+        return None, "market lookup failed"
+    if not m:
+        return None, "market not found"
+    try:
+        tids = [str(t) for t in json.loads(m.get("clobTokenIds") or "[]")]
     except (ValueError, TypeError):
         return None, "no token ids"
+    if str(token) not in tids:
+        return None, "token not in market's clobTokenIds"
     side = "Yes" if str(tids[0]) == str(token) else "No"
     return {"market": m, "side": side,
             "question": m.get("question", "")}, None

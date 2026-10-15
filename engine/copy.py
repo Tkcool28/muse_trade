@@ -8,7 +8,7 @@ import json
 import os
 import time
 
-from pm_api import data_activity, gamma_markets, clob_price, book_depth_ok
+from pm_api import data_activity, gamma_market_by_condition, clob_price, book_depth_ok
 from ledger import (load_state, save_state, buy, sell, tied_up, log_event,
                     MAX_TRADE_USD)
 
@@ -41,10 +41,9 @@ def save_wallets(w):
 
 def market_for(condition_id):
     try:
-        ms = gamma_markets({"condition_id": condition_id, "limit": 1})
+        return gamma_market_by_condition(condition_id)
     except RuntimeError:
         return None
-    return ms[0] if ms else None
 
 
 def token_side(market, token_id):

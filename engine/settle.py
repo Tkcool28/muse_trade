@@ -2,17 +2,16 @@
 """Settlement pass: check open positions for resolution, book P&L, sweep."""
 import json
 
-from pm_api import gamma_markets
+from pm_api import gamma_market_by_condition
 from ledger import (load_state, save_state, settle_position, sweep_check,
                     check_halt, log_event)
 
 
 def market_for(condition_id):
     try:
-        ms = gamma_markets({"condition_id": condition_id, "limit": 1})
+        return gamma_market_by_condition(condition_id)
     except RuntimeError:
         return None
-    return ms[0] if ms else None
 
 
 def is_resolved(market):
