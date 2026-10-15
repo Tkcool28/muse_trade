@@ -48,13 +48,24 @@ def market_for(condition_id):
 
 
 def token_side(market, token_id):
+    """Yes/No for a token, or None if the token isn't in this market.
+
+    Fail-closed: an unknown token NEVER defaults to a side. (2026-10-14:
+    a data-API condition_id resolved to the wrong market and the old
+    else-branch labeled a foreign token 'No' — caught and voided.)
+    """
     try:
-        tids = json.loads(market.get("clobTokenIds") or "[]")
+        tids = [str(t) for t in json.loads(market.get("clobTokenIds") or "[]")]
     except (ValueError, TypeError):
         return None
+    tid = str(token_id)
     if not tids:
         return None
-    return "Yes" if str(tids[0]) == str(token_id) else "No"
+    if tid == tids[0]:
+        return "Yes"
+    if len(tids) > 1 and tid == tids[1]:
+        return "No"
+    return None
 
 
 def days_to_end(market):
