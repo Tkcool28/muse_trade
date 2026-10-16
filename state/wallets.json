@@ -22,7 +22,7 @@
    "style": "soccer singles + exact scores",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792109415,
+   "watermark": 1792119502,
    "eval": {
     "trades_30d": 254,
     "median_hold_d": 0.1,
@@ -38,7 +38,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792114968,
+   "watermark": 1792119838,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
