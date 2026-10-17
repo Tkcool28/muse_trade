@@ -2,14 +2,29 @@
 """Settlement pass: check open positions for resolution, book P&L, sweep."""
 import json
 
-from pm_api import gamma_market_by_condition
+from pm_api import gamma_market_by_condition, gamma_market_by_id
 from ledger import (load_state, save_state, settle_position, sweep_check,
                     check_halt, log_event)
 
 
-def market_for(condition_id):
+def market_for(p):
+    """Resolve a position's market for settlement.
+
+    Prefers the stored Gamma market id: the /markets?condition_ids= listing
+    hides resolved markets (verified 2026-10-17 — Oct-15 positions sat open
+    2 days showing mark 1.00), while /markets/{id} returns them with full
+    umaResolutionStatus/outcomePrices. Falls back to condition lookup.
+    """
+    mid = (p or {}).get("market_id")
+    if mid:
+        try:
+            m = gamma_market_by_id(mid)
+            if m:
+                return m
+        except RuntimeError:
+            pass
     try:
-        return gamma_market_by_condition(condition_id)
+        return gamma_market_by_condition(p["condition_id"])
     except RuntimeError:
         return None
 
@@ -37,7 +52,7 @@ def run_settle(s):
     events = []
     for tid in list(s["positions"]):
         p = s["positions"][tid]
-        m = market_for(p["condition_id"])
+        m = market_for(p)
         winner = is_resolved(m)
         if winner is None:
             continue

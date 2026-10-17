@@ -148,6 +148,11 @@ def buy(s, *, book, token_id, condition_id, question, side, usd, market,
             "last_price": price, "book": book, "opened_ts": now(),
             "reason": reason, "wallet": wallet,
             "end_date": (market or {}).get("endDate"),
+            # Gamma market id: /markets?condition_ids= HIDES resolved markets,
+            # but /markets/{id} returns them — settle.py prefers this.
+            # (2026-10-17: Oct-15 positions sat open for 2 days because the
+            # condition_ids listing missed their resolved markets.)
+            "market_id": (market or {}).get("id"),
         }
     log_event("fill", book=book, token_id=tid, question=question, side=side,
               usd=round(usd, 2), price=round(price, 4),
