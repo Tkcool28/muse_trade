@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792262090,
+   "watermark": 1792264431,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -22,7 +22,7 @@
    "style": "soccer singles + exact scores",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792261824,
+   "watermark": 1792264524,
    "eval": {
     "trades_30d": 254,
     "median_hold_d": 0.1,
@@ -54,14 +54,14 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792257963,
+   "watermark": 1792265721,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
     "redeems_30d": 92,
     "pnl_alltime": 68799.0
    },
-   "copied_trades": 1,
+   "copied_trades": 2,
    "copied_pnl": 0.0
   }
  ]
