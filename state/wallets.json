@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792254249,
+   "watermark": 1792257572,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -22,15 +22,15 @@
    "style": "soccer singles + exact scores",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792253760,
+   "watermark": 1792258550,
    "eval": {
     "trades_30d": 254,
     "median_hold_d": 0.1,
     "redeems_30d": 141,
     "pnl_alltime": 128330.0
    },
-   "copied_trades": 3,
-   "copied_pnl": 0.0
+   "copied_trades": 4,
+   "copied_pnl": -5.23
   },
   {
    "address": "0xa19cbababc312f9df185e49d7004c249ed1ade6b",
@@ -38,14 +38,14 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792254638,
+   "watermark": 1792257738,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
     "redeems_30d": 49,
     "pnl_alltime": 71569.0
    },
-   "copied_trades": 13,
+   "copied_trades": 14,
    "copied_pnl": 14.74
   },
   {
@@ -54,14 +54,14 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792254675,
+   "watermark": 1792257963,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
     "redeems_30d": 92,
     "pnl_alltime": 68799.0
    },
-   "copied_trades": 0,
+   "copied_trades": 1,
    "copied_pnl": 0.0
   }
  ]
