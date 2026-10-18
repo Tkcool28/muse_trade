@@ -22,7 +22,7 @@
    "style": "soccer singles + exact scores",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792358724,
+   "watermark": 1792359647,
    "eval": {
     "trades_30d": 254,
     "median_hold_d": 0.1,
@@ -38,14 +38,14 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792356462,
+   "watermark": 1792362149,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
     "redeems_30d": 49,
     "pnl_alltime": 71569.0
    },
-   "copied_trades": 17,
+   "copied_trades": 18,
    "copied_pnl": 10.98
   },
   {
@@ -54,7 +54,7 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792347831,
+   "watermark": 1792361729,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
@@ -62,7 +62,7 @@
     "pnl_alltime": 68799.0
    },
    "copied_trades": 3,
-   "copied_pnl": -1.61
+   "copied_pnl": 0.66
   }
  ]
 }
