@@ -38,7 +38,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792388111,
+   "watermark": 1792389972,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
