@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792441196,
+   "watermark": 1792444888,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -14,7 +14,7 @@
     "pnl_alltime": 157322.0
    },
    "copied_trades": 3,
-   "copied_pnl": 3.75
+   "copied_pnl": -1.41
   },
   {
    "address": "0x361b16e3ddfe1d415d41008daac2631d94ab74fe",
@@ -22,7 +22,7 @@
    "style": "soccer singles + exact scores",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792441541,
+   "watermark": 1792444525,
    "eval": {
     "trades_30d": 254,
     "median_hold_d": 0.1,
@@ -38,7 +38,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792441118,
+   "watermark": 1792444561,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
