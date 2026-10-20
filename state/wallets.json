@@ -38,14 +38,14 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792469591,
+   "watermark": 1792473107,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
     "redeems_30d": 49,
     "pnl_alltime": 71569.0
    },
-   "copied_trades": 21,
+   "copied_trades": 22,
    "copied_pnl": 7.8
   },
   {
