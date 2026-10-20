@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792487314,
+   "watermark": 1792490525,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -20,7 +20,7 @@
    "address": "0x361b16e3ddfe1d415d41008daac2631d94ab74fe",
    "name": "0x361b16e3ddfe1d415d41008daac2631d94ab74fe",
    "style": "soccer singles + exact scores",
-   "status": "active",
+   "status": "dropped",
    "added_ts": 1792016496,
    "watermark": 1792449926,
    "eval": {
@@ -30,7 +30,9 @@
     "pnl_alltime": 128330.0
    },
    "copied_trades": 8,
-   "copied_pnl": -31.1
+   "copied_pnl": -31.1,
+   "dropped_ts": 1792489585,
+   "drop_reason": "Manual early drop by Terry 2026-10-20: 0-for-6 closed, -$31.10 realized; negative-skew soccer singles/draws, full-size losses only. Cut before the 10-trade rule to stop further bleed."
   },
   {
    "address": "0xa19cbababc312f9df185e49d7004c249ed1ade6b",
@@ -38,7 +40,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792486649,
+   "watermark": 1792490835,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
@@ -54,7 +56,7 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792486630,
+   "watermark": 1792490601,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
