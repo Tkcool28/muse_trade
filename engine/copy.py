@@ -9,8 +9,10 @@ import os
 import time
 
 from pm_api import data_activity, gamma_market_by_condition, clob_price, book_depth_ok
+from fees import fee_rate_for
 from ledger import (load_state, save_state, buy, sell, tied_up, log_event,
                     MAX_TRADE_USD)
+import shadow
 
 ROOT = os.path.expanduser("~/workspace/poly-llm")
 WALLETS = os.path.join(ROOT, "state", "wallets.json")
@@ -81,51 +83,121 @@ def copy_book_tied(s):
                if p.get("book") == "copy")
 
 
+def _sig(w, act, tid, cond, **kw):
+    """Base shadow-signal row for one evaluated wallet BUY (see shadow.py)."""
+    base = {"signal_id": shadow.signal_id(w["address"],
+                                          act.get("timestamp") or 0, tid),
+            "wallet": w["address"], "wallet_name": w.get("name"),
+            "act_ts": act.get("timestamp") or 0, "token_id": tid,
+            "condition_id": cond, "usd": COPY_USD, "evaluable": False,
+            "question": act.get("title") or act.get("question") or "",
+            "wallet_price": float(act.get("price") or 0) or None}
+    base.update(kw)
+    return base
+
+
+def _msig(m, side=None):
+    """Signal fields derivable from a Gamma market object."""
+    if not m:
+        return {}
+    return {"question": m.get("question", ""), "market_id": m.get("id"),
+            "end_date": m.get("endDate"), "fee_rate": fee_rate_for(m)[0],
+            "side": side}
+
+
 def try_copy_buy(s, w, act):
     """Evaluate one wallet BUY against the copy filters.
-    Returns (True, event) on copy, (False, skip-note) otherwise."""
+    Returns (True, event) on copy, (False, skip-note) otherwise.
+    Every payload carries a "signal" row for the shadow log (shadow.py):
+    the decision and its detection-time features, graded at settlement."""
     tid = str(act.get("token_id") or act.get("asset"))
     cond = act.get("condition_id") or act.get("conditionId")
     if not tid or not cond:
-        return False, {"skip": "missing token/condition"}
+        return False, {"skip": "missing token/condition",
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="missing_token_condition")}
     if tid in s["positions"]:
-        return False, {"skip": "already hold token"}
+        # Log-only price/market fetch: the decision (don't average in) is
+        # unchanged, but the skip still gets graded at settlement.
+        p = s["positions"][tid]
+        m = market_for(cond)
+        our_price = None
+        try:
+            our_price = clob_price(tid, "BUY")
+        except RuntimeError:
+            pass
+        kw = _msig(m, side=token_side(m, tid) if m else p.get("side"))
+        kw.update({"question": kw.get("question") or p.get("question", ""),
+                   "market_id": kw.get("market_id") or p.get("market_id"),
+                   "our_price": our_price,
+                   "evaluable": bool(m and our_price and kw.get("side"))})
+        return False, {"skip": "already hold token",
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="already_hold", **kw)}
     m = market_for(cond)
     if not m or m.get("closed"):
-        return False, {"skip": "market closed/unresolved"}
+        return False, {"skip": "market closed/unresolved",
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="market_closed",
+                                      **_msig(m))}
     side = token_side(m, tid)
     if not side:
-        return False, {"skip": "side unmapped"}
+        return False, {"skip": "side unmapped",
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="side_unmapped", **_msig(m))}
     wprice = float(act.get("price") or 0)
     try:
         our_price = clob_price(tid, "BUY")
     except RuntimeError:
         return False, {"skip": "no CLOB book",
-                       "question": m.get("question", "")[:60]}
+                       "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="no_book",
+                                      **_msig(m, side))}
     if not (0 < our_price < 1):
         return False, {"skip": f"bad price {our_price}",
-                       "question": m.get("question", "")[:60]}
-    if wprice > 0 and (our_price - wprice) / wprice > MAX_ADVERSE_MOVE:
-        return False, {"skip":
-                       f"price moved {(our_price-wprice)/wprice:.1%} adverse",
-                       "question": m.get("question", "")[:60]}
+                       "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="bad_price",
+                                      our_price=our_price,
+                                      **_msig(m, side))}
+    adverse = (our_price - wprice) / wprice if wprice > 0 else None
+    base = _msig(m, side)
+    base.update({"our_price": our_price, "evaluable": True,
+                 "adverse_pct": round(adverse, 4) if adverse is not None
+                 else None})
+    if adverse is not None and adverse > MAX_ADVERSE_MOVE:
+        return False, {"skip": f"price moved {adverse:.1%} adverse",
+                       "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="adverse_move", **base)}
     shares = COPY_USD / our_price
-    if not book_depth_ok(tid, "BUY", shares, 3.0):
+    depth_ok = book_depth_ok(tid, "BUY", shares, 3.0)
+    base["depth_ok"] = depth_ok
+    if not depth_ok:
         return False, {"skip": "thin book",
-                       "question": m.get("question", "")[:60]}
+                       "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="thin_book", **base)}
     if copy_book_tied(s) + COPY_USD > COPY_BOOK_TIED_CAP:
         return False, {"skip": "copy book tied-up cap",
-                       "question": m.get("question", "")[:60]}
+                       "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="copy_cap", **base)}
     pos, err = buy(s, book="copy", token_id=tid, condition_id=cond,
                    question=m.get("question", ""), side=side, usd=COPY_USD,
                    market=m, wallet=w["address"],
                    reason=f"copy {w.get('name', w['address'][:8])} @ {wprice:.3f}")
     if err:
-        return False, {"skip": err, "question": m.get("question", "")[:60]}
+        return False, {"skip": err, "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="buy_error", **base)}
     w["copied_trades"] = w.get("copied_trades", 0) + 1
     return True, {"event": "copy_buy", "question": m.get("question", "")[:60],
                   "side": side, "price": round(our_price, 3),
-                  "wallet": w.get("name", w["address"][:8])}
+                  "wallet": w.get("name", w["address"][:8]),
+                  "signal": _sig(w, act, tid, cond, decision="copied",
+                                 **base)}
 
 
 def enforce_time_stop(s):
@@ -163,12 +235,23 @@ def run_copy(s):
         for a in fresh:
             ts = a.get("timestamp") or 0
             w["watermark"] = max(w.get("watermark", 0), ts)
-            if ts < time.time() - STALE_HOURS * 3600:
-                continue  # first sight but stale; don't chase
             atype = a.get("type")
             tid = str(a.get("token_id") or a.get("asset") or "")
+            if ts < time.time() - STALE_HOURS * 3600:
+                # First sight but stale; don't chase. Still shadow-log BUYs:
+                # the dataset counts every signal, even ungradeable ones.
+                if atype == "TRADE" and a.get("side") == "BUY":
+                    shadow.record_signal(_sig(
+                        w, a, tid,
+                        a.get("condition_id") or a.get("conditionId"),
+                        decision="skipped", skip_reason="stale_first_seen",
+                        question=a.get("title") or a.get("question")))
+                continue
             if atype == "TRADE" and a.get("side") == "BUY":
                 ok, payload = try_copy_buy(s, w, a)
+                sig = payload.pop("signal", None)
+                if sig:
+                    shadow.record_signal(sig)
                 (events if ok else skips).append(payload)
             elif atype == "TRADE" and a.get("side") == "SELL":
                 p = s["positions"].get(tid)

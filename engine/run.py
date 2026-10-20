@@ -14,6 +14,7 @@ from settle import run_settle  # noqa: E402
 from copy import run_copy  # noqa: E402
 from scanner import scan  # noqa: E402
 import dashboard  # noqa: E402
+import shadow  # noqa: E402
 
 
 def main():
@@ -25,6 +26,17 @@ def main():
         copy_events, copy_skips = run_copy(s)
         out["events"].extend(copy_events)
         out["skips"] = copy_skips  # filter notes; never wake on these
+        # Shadow pass: grade previously logged signals whose markets have
+        # resolved (would-be P&L for copied AND skipped decisions).
+        try:
+            graded = shadow.settle_signals()
+            summ = shadow.summary()
+            out["shadow"] = {"graded_this_run": len(graded),
+                             "signals": summ["signals"],
+                             "graded_total": summ["graded"],
+                             "pending": summ["pending"]}
+        except Exception as ex:  # noqa: BLE001 - shadow never blocks trading
+            out["shadow"] = {"error": str(ex)[:120]}
         c = scan()
         out["candidates"] = {k: len(v) for k, v in c.items()
                              if isinstance(v, list)}

@@ -66,6 +66,23 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
   P&L, fees paid; per-book P&L; wallets (copied trades, P&L, win rate, status);
   open positions; recent trades with reasons; kill-criteria status.
 
+## 9. Shadow signal log (added 2026-10-20, Terry's call)
+- Every fresh wallet BUY the copy loop evaluates is appended to
+  `state/signals.jsonl` (`engine/shadow.py`): decision (`copied`/`skipped`),
+  skip-reason category, and detection-time features (wallet price, our
+  executable price, adverse %, fee rate, book depth, market id).
+- Each run, resolved signals are graded: would-be P&L of a $5 taker copy at
+  the detection price, held to settlement, real fee model. A skip is
+  "correct" when copying would not have profited; the learner-facing
+  reward is +would-be-P&L for copies, −would-be-P&L for skips.
+- Signals whose price was never honestly observable (stale, no book,
+  unmapped side, closed market) are logged `evaluable: false` and never
+  graded — no invented prices.
+- Purpose: the dataset a future condition-learner (bandit-style, per
+  Terry's validation standard — shadow first, pre-declared rule,
+  walk-forward, kill rule on top) trains on. Logging only; nothing in the
+  trade path reads it yet. Summary: `python3 engine/shadow.py`.
+
 ## 8. Honesty notes
 - $5 size ⇒ ~5% round-trip fee drag at 50¢ sports. The edge must clear that.
   This is the experiment's load-bearing fact, not a bug.
