@@ -40,7 +40,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792499001,
+   "watermark": 1792502438,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
@@ -65,6 +65,34 @@
    },
    "copied_trades": 4,
    "copied_pnl": 3.62
+  },
+  {
+   "address": "0xdaef2be2a19ad331737d06545f85615b094554e9",
+   "name": "PEYZ-BIGGEST-FAN",
+   "style": "LoL esports game-winner markets + some NHL/NFL; high-frequency directional, holds to settlement (Poly2-scored replacement for 0x361b)",
+   "status": "active",
+   "added_ts": 1792500604,
+   "watermark": 1792500604,
+   "eval": {
+    "source": "Poly2 scoring (vendored score.py) + Gamma-validated cash-flow accounting, 2026-10-20",
+    "poly2_composite": 72.73,
+    "poly2_verdict": "pending_review",
+    "components": {
+     "sample_strength": 100.0,
+     "concentration": 98.3,
+     "profit_factor": 9.07,
+     "consistency": 81.25,
+     "recency": 66.72
+    },
+    "settled_markets_scored": 609,
+    "window_days": 100.0,
+    "window_realized_pnl": 647661,
+    "median_hold_d": 0.4,
+    "pct_buys_ge_090": 0.01,
+    "sell_buy_ratio": 0.02
+   },
+   "copied_trades": 0,
+   "copied_pnl": 0.0
   }
  ]
 }
