@@ -40,7 +40,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792628120,
+   "watermark": 1792631810,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
@@ -56,7 +56,7 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1792629096,
+   "watermark": 1792631181,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
@@ -72,7 +72,7 @@
    "style": "LoL esports game-winner markets + some NHL/NFL; high-frequency directional, holds to settlement (Poly2-scored replacement for 0x361b)",
    "status": "active",
    "added_ts": 1792500604,
-   "watermark": 1792628549,
+   "watermark": 1792632474,
    "eval": {
     "source": "Poly2 scoring (vendored score.py) + Gamma-validated cash-flow accounting, 2026-10-20",
     "poly2_composite": 72.73,
