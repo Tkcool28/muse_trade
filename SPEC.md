@@ -27,16 +27,20 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
 ## 3. Copy book (mechanical half)
 - Wallets: independently evaluated shortlist (eval_wallets.py). Gates:
   ≥8 trades/30d, median hold ≤21d, last trade ≤5d ago, realized closes exist
-  (REDEEM events). Bank tie-up protected by the 21-day time stop, not the
-  (meaningless) endDate field.
+  (REDEEM events). Bank tie-up protected by the 21-day time stop plus the
+  30-day resolution cap on entries (below).
 - Mirror BUYs only (direction, not size). Size: $5/trade (2.5% of bank).
 - Skip if: price moved >4% adverse vs wallet's fill; best-side depth < 3× our
   size; copy-book tied-up ≥ $60; token has no CLOB book; wallet trade older
-  than 6h when first seen (stale).
+  than 6h when first seen (stale); market resolves >30 days out
+  (`long_resolution`, added 2026-10-23 on Terry's call — "one month tops").
 - No copy position lives longer than 21 days (time stop, sold at market).
-  (The market `endDate` field is a placeholder — everything reads 2027-01-01,
-  even tonight's games — so duration is enforced by the time stop, not endDate.
-  The eval gates already proved these wallets hold ~0.1–4 days.)
+  (History: an endDate-based filter was removed 2026-10-14 because Gamma
+  endDate then read 2027-01-01 for everything. The Oct 20-23 shadow log shows
+  endDate is differentiated now, so the 30-day entry filter is back — but it
+  fails OPEN on a missing/unparseable date, so a bad field can never block
+  the whole book again; the time stop remains the hard backstop. The eval
+  gates already proved these wallets hold ~0.1–4 days.)
 - Mirror SELLs by closing our matching position; REDEEM/resolution settles it.
 - Wallet dropped after ≥10 copied trades with copied realized P&L < 0.
 

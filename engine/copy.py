@@ -4,6 +4,7 @@
 Detection latency is real: we fill at the executable price observed when the
 hook first sees the wallet's trade. Never backfilled.
 """
+import calendar
 import json
 import os
 import time
@@ -20,10 +21,15 @@ WALLETS = os.path.join(ROOT, "state", "wallets.json")
 COPY_USD = 5.0
 COPY_BOOK_TIED_CAP = 60.0
 MAX_ADVERSE_MOVE = 0.04
-TIME_STOP_DAYS = 21  # no copy position lives longer than this, whatever the
-# market's endDate says (that field is a placeholder — everything reads
-# 2027-01-01, even tonight's games). This is the real "don't tie up the bank"
-# enforcement; the eval gates already proved these wallets hold ~0.1-4 days.
+TIME_STOP_DAYS = 21  # no copy position lives longer than this. Hard backstop
+# on capital tie-up; the eval gates proved these wallets hold ~0.1-4 days.
+MAX_DAYS_TO_END = 30  # Terry 2026-10-23: no copy entries into markets that
+# resolve more than 30 days out ("one month tops"). The original Oct-14
+# end-date filter was removed because Gamma endDate then read 2027-01-01 for
+# everything; the Oct 20-23 shadow log shows endDate is differentiated now
+# (tonight's games read tonight, the 2027 NBA Finals reads 2027). The filter
+# still fails OPEN on a missing/unparseable date — a bad field must never
+# block the whole book again; the time stop above is the guarantee.
 STALE_HOURS = 6
 
 
@@ -70,9 +76,10 @@ def token_side(market, token_id):
 
 
 def days_to_end(market):
+    """Days until the market's Gamma endDate (UTC), or None if unparseable."""
     try:
-        end = time.mktime(time.strptime(market.get("endDate") or "",
-                                        "%Y-%m-%dT%H:%M:%SZ"))
+        end = calendar.timegm(time.strptime(market.get("endDate") or "",
+                                            "%Y-%m-%dT%H:%M:%SZ"))
         return (end - time.time()) / 86400.0
     except (ValueError, TypeError):
         return None
@@ -145,6 +152,14 @@ def try_copy_buy(s, w, act):
         return False, {"skip": "side unmapped",
                        "signal": _sig(w, act, tid, cond, decision="skipped",
                                       skip_reason="side_unmapped", **_msig(m))}
+    dte = days_to_end(m)
+    if dte is not None and dte > MAX_DAYS_TO_END:
+        return False, {"skip": f"resolves in {dte:.0f}d (>30d cap)",
+                       "question": m.get("question", "")[:60],
+                       "signal": _sig(w, act, tid, cond, decision="skipped",
+                                      skip_reason="long_resolution",
+                                      days_to_end=round(dte, 1),
+                                      **_msig(m, side))}
     wprice = float(act.get("price") or 0)
     try:
         our_price = clob_price(tid, "BUY")
