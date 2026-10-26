@@ -40,7 +40,7 @@
    "style": "short-dated crypto/oil price levels",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1793023296,
+   "watermark": 1793026941,
    "eval": {
     "trades_30d": 299,
     "median_hold_d": 0.7,
@@ -56,7 +56,7 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1793022507,
+   "watermark": 1793026389,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
