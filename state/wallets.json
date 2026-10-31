@@ -6,14 +6,14 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1793422864,
+   "watermark": 1793430109,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
     "redeems_30d": 34,
     "pnl_alltime": 157322.0
    },
-   "copied_trades": 3,
+   "copied_trades": 4,
    "copied_pnl": -1.41
   },
   {
@@ -72,7 +72,7 @@
    "style": "LoL esports game-winner markets + some NHL/NFL; high-frequency directional, holds to settlement (Poly2-scored replacement for 0x361b)",
    "status": "active",
    "added_ts": 1792500604,
-   "watermark": 1793422248,
+   "watermark": 1793430475,
    "eval": {
     "source": "Poly2 scoring (vendored score.py) + Gamma-validated cash-flow accounting, 2026-10-20",
     "poly2_composite": 72.73,
@@ -91,7 +91,7 @@
     "pct_buys_ge_090": 0.01,
     "sell_buy_ratio": 0.02
    },
-   "copied_trades": 3,
+   "copied_trades": 4,
    "copied_pnl": -2.37
   }
  ]
