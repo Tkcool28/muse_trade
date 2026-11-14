@@ -35,6 +35,10 @@ def fresh_state():
         "positions": {},
         "halted": False,
         "halt_reason": None,
+        # Drawdown halt line in dollars; -20% from the baseline set at
+        # start (or at a restart — Terry, 2026-11-14). check_halt reads this.
+        "halt_line": 160.0,
+        "halt_baseline": START_BANK,
         "daily": {"date": time.strftime("%Y-%m-%d"), "realized": 0.0},
         "started_ts": now(),
     }
@@ -180,11 +184,15 @@ def _close(s, tid, proceeds_net, how, reason=None):
 
 
 def sell(s, token_id, reason=None):
-    """Paper taker SELL of full position at the bid."""
+    """Paper taker SELL of full position at the bid.
+
+    Sells deliberately bypass _guard: every guard condition exists to limit
+    NEW risk (halt, daily brake, tied-up cap, cash). A sell only reduces
+    exposure, so blocking it traps the position — exactly what happened
+    Oct 31–Nov 14 2026, when the halt froze all time-stop exits while
+    settles kept resolving. (Terry, 2026-11-14 restart.)
+    """
     tid = str(token_id)
-    err = _guard(s, None)
-    if err:
-        return None, err
     p = s["positions"].get(tid)
     if not p:
         return None, "no position"
@@ -230,9 +238,11 @@ def sweep_check(s):
 
 def check_halt(s):
     e = equity(s)
-    if not s["halted"] and e["bank_equity"] < HALT_EQUITY:
+    line = s.get("halt_line", HALT_EQUITY)
+    if not s["halted"] and e["bank_equity"] < line:
         s["halted"] = True
-        s["halt_reason"] = f"equity ${e['bank_equity']:.2f} < $160 drawdown halt"
+        s["halt_reason"] = (f"equity ${e['bank_equity']:.2f} < ${line:.2f} "
+                            f"drawdown halt")
         log_event("halt", reason=s["halt_reason"])
         save_state(s)
         return True

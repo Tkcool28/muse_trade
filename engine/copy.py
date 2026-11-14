@@ -23,6 +23,16 @@ COPY_BOOK_TIED_CAP = 60.0
 MAX_ADVERSE_MOVE = 0.04
 TIME_STOP_DAYS = 21  # no copy position lives longer than this. Hard backstop
 # on capital tie-up; the eval gates proved these wallets hold ~0.1-4 days.
+FLOOR_STOP = 0.15  # salvage stop (Terry, 2026-11-14): sell a copy position
+# the first run its mark prints below 0.15 — "if its dead its dead". Backtest
+# on all 54 settled copy positions (CLOB price history, real exit fees,
+# train settled <Oct 26 vs holdout >=Oct 26): floor won in BOTH splits
+# (+$14.98 / +$10.86, +$25.84 total; book -$63.10 -> -$37.26), 25 losers
+# salvaged vs 2 winners cut. Relative 50%-of-entry stops were ~breakeven and
+# the age gate made them worse, so they were NOT adopted. A sports carve-out
+# was tested too and rejected: it gave back $10.90 of salvage and saved zero
+# winners (no sub-0.15 sports position ever came back), and Gamma carries no
+# usable category field anyway (category/tags are null on these markets).
 MAX_DAYS_TO_END = 30  # Terry 2026-10-23: no copy entries into markets that
 # resolve more than 30 days out ("one month tops"). The original Oct-14
 # end-date filter was removed because Gamma endDate then read 2027-01-01 for
@@ -231,6 +241,30 @@ def enforce_time_stop(s):
     return events
 
 
+def enforce_floor_stop(s):
+    """Salvage stop: close copy positions whose mark fell below FLOOR_STOP.
+
+    Runs on the refreshed last_price (run_settle's check_halt refreshes marks
+    before run_copy). Applies to copy positions only — the rule was tested on
+    the copy book. A sub-0.15 entry is exited on the next run after its fill,
+    which the backtest counts as intended (those entries went 0-for-6).
+    """
+    events = []
+    for tid in list(s["positions"]):
+        p = s["positions"][tid]
+        if p.get("book") != "copy":
+            continue
+        mark = p.get("last_price")
+        if mark is None:
+            continue
+        if mark < FLOOR_STOP:
+            r, err = sell(s, tid, reason=f"floor stop (<{FLOOR_STOP})")
+            events.append({"event": "floor_stop",
+                           "question": p["question"][:60],
+                           "realized": round(r or 0, 2), "error": err})
+    return events
+
+
 def run_copy(s):
     events, skips = [], []
     wstate = load_wallets()
@@ -280,6 +314,7 @@ def run_copy(s):
             # REDEEM: our settle pass handles resolution
         save_wallets(wstate)
     events.extend(enforce_time_stop(s))
+    events.extend(enforce_floor_stop(s))
     recompute_wallet_stats(s, wstate)
     save_wallets(wstate)
     return events, skips

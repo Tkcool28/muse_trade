@@ -87,3 +87,42 @@ def test_copy_unparseable_enddate_fails_open(monkeypatch, _patched):
     ok, payload = _poly_copy.try_copy_buy({"positions": {}}, dict(_W), _ACT)
     assert ok
     assert len(_patched) == 1
+
+
+# --- floor salvage stop (Terry, 2026-11-14) ---
+
+def _pos(question, last_price, book="copy"):
+    return {"question": question, "book": book, "last_price": last_price,
+            "side": "Yes", "shares": 10.0, "avg_price": 0.5, "cost": 5.0}
+
+
+def test_floor_stop_fires_below_015(monkeypatch):
+    sold = []
+
+    def fake_sell(s, tid, reason=None):
+        sold.append(tid)
+        return 0.0, None
+
+    monkeypatch.setattr(_poly_copy, "sell", fake_sell)
+    s = {"positions": {"t1": _pos("Dead crypto level", 0.065),
+                       "t2": _pos("Alive", 0.50),
+                       "t3": _pos("At the line", 0.15),
+                       "t4": _pos("Disc dead", 0.05, book="disc")}}
+    evs = _poly_copy.enforce_floor_stop(s)
+    assert sold == ["t1"]  # only the sub-0.15 COPY position
+    assert len(evs) == 1 and evs[0]["event"] == "floor_stop"
+
+
+def test_floor_stop_skips_missing_mark(monkeypatch):
+    sold = []
+
+    def fake_sell(s, tid, reason=None):
+        sold.append(tid)
+        return 0.0, None
+
+    monkeypatch.setattr(_poly_copy, "sell", fake_sell)
+    p = _pos("No mark yet", 0.50)
+    del p["last_price"]
+    s = {"positions": {"t1": p}}
+    assert _poly_copy.enforce_floor_stop(s) == []
+    assert sold == []

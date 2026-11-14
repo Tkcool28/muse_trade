@@ -41,7 +41,18 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
   fails OPEN on a missing/unparseable date, so a bad field can never block
   the whole book again; the time stop remains the hard backstop. The eval
   gates already proved these wallets hold ~0.1–4 days.)
+- Floor salvage stop (added 2026-11-14, Terry's call): a copy position is
+  sold the first run its mark prints below 0.15. Backtest on all 54 settled
+  copy positions (CLOB price history, real exit fees, train <Oct 26 vs
+  holdout ≥Oct 26): +$14.98 / +$10.86, +$25.84 total. A sports carve-out was
+  tested and rejected — it gave back $10.90 of salvage and saved zero
+  winners. Relative 50%-of-entry stops were ~breakeven and are not used.
 - Mirror SELLs by closing our matching position; REDEEM/resolution settles it.
+- **Exits bypass the halt guard** (2026-11-14): sells (time stop, floor
+  stop, wallet-exit mirror) are never blocked by the halt or the daily loss
+  brake — the guard exists to limit NEW risk, and blocking a sell traps the
+  position, which is what froze all exits Oct 31–Nov 14. Buys still respect
+  the halt, brake, and caps.
 - Wallet dropped after ≥10 copied trades with copied realized P&L < 0.
 
 ## 4. Discretionary book (Muse's half)
@@ -54,7 +65,14 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
 
 ## 5. Risk / kill criteria
 - Per-trade cap $5 (2.5% of bank). Bank-wide tied-up cap $120 (60%).
-- Drawdown halt: equity < $160 (−20%) → no new entries, notify Terry.
+- Drawdown halt: equity < halt line (−20% from baseline) → no new entries,
+  notify Terry. Baseline $200 / line $160 at start; tripped Oct 31, 2026 at
+  $159.40. **Restarted 2026-11-14 on Terry's call: baseline $136.25, new line
+  $109.00** (same −20% chance from where the book is). The restart run's
+  time stop closed Hyperliquid No (+$2.35) and BTC $90k Yes (−$4.57); the
+  West Indies position could NOT be sold — its CLOB token 404s (market
+  resolved 0.5/0.5, no live book) — it stays open pending a split-settle
+  fix, which Terry has not authorized.
 - 60-day review: need ≥40 closed trades; net realized P&L ≤ $0 kills the
   losing half (keeps a green half); both ≤ $0 = full stop + post-mortem.
 - Daily loss brake: −$15 realized in a day → no new entries until next day.

@@ -90,6 +90,33 @@ def test_drawdown_halt():
     assert err is not None and "halted" in err
 
 
+def test_sell_bypasses_halt():
+    # 2026-11-14 restart: exits must work while halted, or the halt traps
+    # positions (Oct 31-Nov 14: every time-stop exit blocked for 2 weeks).
+    _mock_prices(buy_px=0.50, sell_px=0.40)
+    s = ledger.fresh_state()
+    ledger.buy(s, book="copy", token_id="t1", condition_id="c1",
+               question="Q?", side="Yes", usd=5.0, market=MKT)
+    s["halted"] = True
+    s["halt_reason"] = "equity $100.00 < $160.00 drawdown halt"
+    r, err = ledger.sell(s, "t1", reason="time stop")
+    assert err is None
+    assert "t1" not in s["positions"]
+
+
+def test_check_halt_uses_state_line():
+    # Restart 2026-11-14: the halt line is 80% of restart equity, stored in
+    # state — not the original $160.
+    _mock_prices()
+    s = ledger.fresh_state()
+    s["halt_line"] = 100.0
+    s["cash"] = 110.0
+    assert ledger.check_halt(s) is False
+    s["cash"] = 90.0
+    assert ledger.check_halt(s) is True
+    assert "100" in (s["halt_reason"] or "")
+
+
 def test_no_double_spend_same_token_merges():
     _mock_prices()
     s = ledger.fresh_state()
