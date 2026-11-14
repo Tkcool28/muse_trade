@@ -107,6 +107,11 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
 - Signals whose price was never honestly observable (stale, no book,
   unmapped side, closed market) are logged `evaluable: false` and never
   graded — no invented prices.
+- Grading cadence (fixed 2026-11-14, Terry's call): a still-unresolved
+  signal is re-checked at most once per 6h (`state/shadow_checked.json`);
+  the 30 checks/run rotate through the backlog oldest-first. Before the
+  fix the grader re-checked the same 30 oldest unresolved signals every
+  run, so grading sat at 244 for three weeks while ~8,600 signals waited.
 - Purpose: the dataset a future condition-learner (bandit-style, per
   Terry's validation standard — shadow first, pre-declared rule,
   walk-forward, kill rule on top) trains on. Logging only; nothing in the

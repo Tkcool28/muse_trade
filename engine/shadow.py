@@ -31,6 +31,14 @@ from fees import GAS_PER_FILL
 
 ROOT = os.path.expanduser("~/workspace/poly-llm")
 SIGNALS = os.path.join(ROOT, "state", "signals.jsonl")
+CHECKED = os.path.join(ROOT, "state", "shadow_checked.json")
+# Grading cooldown (2026-11-14 fix): a still-unresolved signal is re-checked
+# at most once per 6h. Before this, settle_signals() re-checked the SAME 30
+# oldest unresolved signals every 15-min run, so grading sat at 244 while
+# 8,587 signals waited (oldest pending: Oct 21). The cooldown makes the 30
+# checks/run rotate through the queue instead of hammering its head; a
+# market that resolves is still caught at the next eligible check.
+GRADE_COOLDOWN_S = 6 * 3600
 
 _seen_ids = None  # lazy set of recorded signal_ids (dedupe on crash-retry)
 
@@ -104,14 +112,54 @@ def pending_signals():
             if s.get("evaluable") and sid not in outcomes]
 
 
+def _load_checked():
+    """{signal_id: {"ts": last check, "n": checks}} — survives restarts."""
+    try:
+        with open(CHECKED) as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _save_checked(checked):
+    tmp = CHECKED + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(checked, f)
+    os.replace(tmp, CHECKED)
+
+
 def settle_signals(max_checks=30):
     """Grade up to max_checks pending signals (oldest first) whose markets
-    have resolved. Returns outcome events for the run summary."""
+    have resolved. Returns outcome events for the run summary.
+
+    Only signals past their grading cooldown are checked, so the 30
+    checks/run rotate through the backlog instead of re-checking the same
+    unresolved head every run (see GRADE_COOLDOWN_S)."""
     from settle import market_for, is_resolved  # deferred: avoids any cycle
 
     events = []
+    checked = _load_checked()
+    _, outcomes = load_all()
+    dirty = False
+    for sid in list(checked):  # drop entries for signals graded since
+        if sid in outcomes:
+            del checked[sid]
+            dirty = True
+    now = int(time.time())
     pend = sorted(pending_signals(), key=lambda s: s.get("act_ts", 0))
-    for s in pend[:max_checks]:
+    due = []
+    for s in pend:
+        ent = checked.get(s["signal_id"])
+        last = ent.get("ts", 0) if isinstance(ent, dict) else 0
+        if now - (last or 0) >= GRADE_COOLDOWN_S:
+            due.append(s)
+    touched = False
+    for s in due[:max_checks]:
+        ent = checked.get(s["signal_id"])
+        n = ent.get("n", 0) if isinstance(ent, dict) else 0
+        checked[s["signal_id"]] = {"ts": now, "n": n + 1}
+        touched = True
         m = market_for({"market_id": s.get("market_id"),
                         "condition_id": s.get("condition_id")})
         winner = is_resolved(m)
@@ -137,6 +185,8 @@ def settle_signals(max_checks=30):
                        "question": (s.get("question") or "")[:60],
                        "decision": s.get("decision"),
                        "would_be_pnl": round(pnl, 2), "correct": correct})
+    if touched or dirty:
+        _save_checked(checked)
     return events
 
 

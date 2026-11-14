@@ -102,3 +102,55 @@ def test_summary_counts_decisions(tmp_path, monkeypatch):
     assert s["signals"] == 2 and s["graded"] == 0
     assert s["by_decision"] == {"skipped": 1, "copied": 1}
     assert s["skip_reasons"] == {"adverse_move": 1}
+
+
+# --- grading cooldown (2026-11-14 fix) ---
+
+class _Clock:
+    def __init__(self, now):
+        self.now = now
+
+    def time(self):
+        return self.now
+
+
+def test_grader_cooldown_rotates(tmp_path, monkeypatch):
+    # The clog: without a cooldown the grader re-checked the same 30
+    # oldest unresolved signals every run and graded nothing new.
+    _isolate(tmp_path, monkeypatch)
+    monkeypatch.setattr(shadow, "CHECKED", str(tmp_path / "checked.json"))
+    clock = _Clock(1_700_000_000)
+    monkeypatch.setattr(shadow, "time", clock)
+    for i in range(35):
+        shadow.record_signal(_sig(signal_id=f"w1-{i}-t", act_ts=i,
+                                  condition_id=f"0xc{i}"))
+    calls = []
+    monkeypatch.setattr(settle, "market_for",
+                        lambda p: calls.append(p["condition_id"])
+                        or {"id": "42"})
+    monkeypatch.setattr(settle, "is_resolved", lambda m: None)
+    shadow.settle_signals(max_checks=30)
+    assert len(calls) == 30
+    first = set(calls)
+    calls.clear()
+    shadow.settle_signals(max_checks=30)
+    assert len(calls) == 5  # the rest, not the first 30 again
+    assert not first & set(calls)
+    clock.now += 7 * 3600  # past the 6h cooldown
+    calls.clear()
+    shadow.settle_signals(max_checks=30)
+    assert len(calls) == 30
+    assert set(calls) == first
+
+
+def test_graded_signal_checked_entry_pruned(tmp_path, monkeypatch):
+    _isolate(tmp_path, monkeypatch)
+    monkeypatch.setattr(shadow, "CHECKED", str(tmp_path / "checked.json"))
+    shadow.record_signal(_sig())
+    monkeypatch.setattr(settle, "market_for", lambda p: {"id": "42"})
+    monkeypatch.setattr(settle, "is_resolved", lambda m: "No")
+    shadow.settle_signals()
+    _, outcomes = shadow.load_all()
+    assert "w1-100-tok1" in outcomes
+    shadow.settle_signals()  # nothing due; pruning still persists
+    assert "w1-100-tok1" not in json.load(open(tmp_path / "checked.json"))
