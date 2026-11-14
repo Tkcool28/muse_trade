@@ -81,6 +81,13 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
 - Hook checks open positions each run: Gamma market by condition → resolved?
   Winners redeem $1.00/share, losers $0. Losers/winners both close, realized
   P&L booked net of all fees+gas paid on the position.
+- **Split resolution (added 2026-11-14, Terry's call):** a market that
+  resolves to a fractional payout (e.g. outcomePrices `["0.5","0.5"]` on a
+  drawn series) settles at that price per share for our side. Without this
+  the position never settles — and once the market closes CLOB delists the
+  token (404 on /price), so it can't be sold either. First use: West Indies
+  T20 settled SPLIT @ 0.50 the same day (+$3.62 proceeds, −$1.46 realized).
+  Only 2-outcome markets; a clean 1/0 is a win, never a split.
 
 ## 7. Dashboard
 - `dashboard.html`, regenerated every hook run. Phone-first, dark.

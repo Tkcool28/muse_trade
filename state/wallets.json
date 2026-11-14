@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1794678469,
+   "watermark": 1794678865,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -30,7 +30,7 @@
     "pnl_alltime": 128330.0
    },
    "copied_trades": 8,
-   "copied_pnl": -31.1,
+   "copied_pnl": -32.56,
    "dropped_ts": 1792489585,
    "drop_reason": "Manual early drop by Terry 2026-10-20: 0-for-6 closed, -$31.10 realized; negative-skew soccer singles/draws, full-size losses only. Cut before the 10-trade rule to stop further bleed."
   },
@@ -72,7 +72,7 @@
    "style": "LoL esports game-winner markets + some NHL/NFL; high-frequency directional, holds to settlement (Poly2-scored replacement for 0x361b)",
    "status": "active",
    "added_ts": 1792500604,
-   "watermark": 1794678613,
+   "watermark": 1794679019,
    "eval": {
     "source": "Poly2 scoring (vendored score.py) + Gamma-validated cash-flow accounting, 2026-10-20",
     "poly2_composite": 72.73,
@@ -91,7 +91,7 @@
     "pct_buys_ge_090": 0.01,
     "sell_buy_ratio": 0.02
    },
-   "copied_trades": 4,
+   "copied_trades": 5,
    "copied_pnl": -12.55
   }
  ]

@@ -219,6 +219,21 @@ def settle_position(s, token_id, win):
     return r, None
 
 
+def settle_position_split(s, token_id, price_per_share):
+    """Split-resolution settle: the market resolved to a FRACTIONAL payout
+    (e.g. 0.5/0.5 on a drawn series) — each side pays its outcome price per
+    share, not $1/$0. No redemption fee. (2026-11-14: West Indies resolved
+    0.5/0.5 and sat open 3 weeks because no split path existed.)"""
+    tid = str(token_id)
+    p = s["positions"].get(tid)
+    if not p:
+        return None, "no position"
+    proceeds = p["shares"] * price_per_share
+    r = _close(s, tid, proceeds, "settle",
+               reason=f"resolved SPLIT @ {price_per_share:.2f}")
+    return r, None
+
+
 def sweep_check(s):
     """Move $25 chunks of unswept realized profit to the sweep account."""
     swept = []

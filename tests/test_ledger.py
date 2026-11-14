@@ -69,6 +69,18 @@ def test_settle_loss_zeroes():
     assert abs(r - (-5.13)) < 1e-9
 
 
+def test_settle_split_pays_fractional():
+    # 2026-11-14: a market resolving 0.5/0.5 pays half value per share.
+    _mock_prices()
+    s = ledger.fresh_state()
+    ledger.buy(s, book="copy", token_id="t1", condition_id="c1",
+               question="Q?", side="Yes", usd=5.0, market=MKT)
+    r, err = ledger.settle_position_split(s, "t1", 0.5)
+    assert err is None
+    assert abs(r - (5.0 - 5.13)) < 1e-9  # 10 shares @ .50, no redemption fee
+    assert "t1" not in s["positions"]
+
+
 def test_sweep_moves_25_chunks():
     _mock_prices()
     s = ledger.fresh_state()
