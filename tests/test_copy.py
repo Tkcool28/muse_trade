@@ -126,3 +126,48 @@ def test_floor_stop_skips_missing_mark(monkeypatch):
     s = {"positions": {"t1": p}}
     assert _poly_copy.enforce_floor_stop(s) == []
     assert sold == []
+
+
+# --- auto-drop hold on manual reinstatement (Terry, 2026-11-15) ---
+# PEYZ was auto-dropped at 10 trades / -$12.55; Terry reinstated it so the
+# Tue Nov 17 recheck evaluates it on full data. The drop rule must not
+# re-fire on the very next loop run, but must re-arm once the hold expires.
+
+def _wallets_with_hold(tmp_path, monkeypatch, hold_until):
+    import json
+    rows = []
+    for i in range(10):
+        rows.append({"type": "fill", "wallet": "0xPEYZ", "token_id": f"t{i}"})
+    rows.append({"type": "settle", "wallet": "0xPEYZ", "realized": -12.55})
+    d = tmp_path / "state"
+    d.mkdir()
+    (d / "ledger.jsonl").write_text(
+        "\n".join(json.dumps(r) for r in rows) + "\n")
+    monkeypatch.setattr(_poly_copy, "ROOT", str(tmp_path))
+    w = {"address": "0xPEYZ", "status": "active"}
+    if hold_until is not None:
+        w["drop_hold_until"] = hold_until
+    return {"wallets": [w]}
+
+
+def test_drop_hold_keeps_reinstated_wallet_active(tmp_path, monkeypatch):
+    wstate = _wallets_with_hold(tmp_path, monkeypatch,
+                                int(time.time()) + 86400)
+    _poly_copy.recompute_wallet_stats({}, wstate)
+    w = wstate["wallets"][0]
+    assert w["status"] == "active"
+    assert w["copied_trades"] == 10
+    assert w["copied_pnl"] == -12.55
+
+
+def test_drop_fires_once_hold_expires(tmp_path, monkeypatch):
+    wstate = _wallets_with_hold(tmp_path, monkeypatch,
+                                int(time.time()) - 60)
+    _poly_copy.recompute_wallet_stats({}, wstate)
+    assert wstate["wallets"][0]["status"] == "dropped"
+
+
+def test_drop_fires_with_no_hold(tmp_path, monkeypatch):
+    wstate = _wallets_with_hold(tmp_path, monkeypatch, None)
+    _poly_copy.recompute_wallet_stats({}, wstate)
+    assert wstate["wallets"][0]["status"] == "dropped"

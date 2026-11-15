@@ -54,6 +54,7 @@ Comparison target: Terry's Polycopy (mechanical copy bot, $200 paper).
   position, which is what froze all exits Oct 31–Nov 14. Buys still respect
   the halt, brake, and caps.
 - Wallet dropped after ≥10 copied trades with copied realized P&L < 0.
+- Manual reinstatement can carry `drop_hold_until` (epoch): the auto-drop rule is suspended until then, then re-arms normally. First use 2026-11-15: PEYZ reinstated by Terry after its auto-drop (10 trades, -$12.55) so the Tue Nov 17 recheck evaluates it on full data; hold until 2026-11-18 00:00 MST. A `wallet_reinstated` ledger event records it.
 
 ## 4. Discretionary book (Muse's half)
 - Hunting ground only: (a) new markets (<12h old), (b) niche (<$10k 7d volume),

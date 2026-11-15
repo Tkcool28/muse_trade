@@ -345,8 +345,13 @@ def recompute_wallet_stats(s, wstate=None):
         st = stats.get(w["address"], {"trades": 0, "pnl": 0.0})
         w["copied_trades"] = st["trades"]
         w["copied_pnl"] = round(st["pnl"], 2)
+        # Manual reinstatement can carry a drop_hold_until epoch: the auto-drop
+        # rule is suspended until then (Terry 2026-11-15: PEYZ reinstated so
+        # the Tue Nov 17 recheck evaluates it on full data, not a thinned
+        # roster). After the hold expires the rule applies again normally.
+        hold_until = w.get("drop_hold_until") or 0
         if (w.get("status") == "active" and st["trades"] >= 10
-                and st["pnl"] < 0):
+                and st["pnl"] < 0 and time.time() >= hold_until):
             w["status"] = "dropped"
             log_event("wallet_dropped", wallet=w["address"],
                       reason=f"{st['trades']} copied trades, P&L ${st['pnl']:.2f}")
