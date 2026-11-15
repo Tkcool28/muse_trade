@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1794739837,
+   "watermark": 1794746119,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -56,14 +56,14 @@
    "style": "esports match markets",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1794741320,
+   "watermark": 1794742733,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
     "redeems_30d": 92,
     "pnl_alltime": 68799.0
    },
-   "copied_trades": 8,
+   "copied_trades": 9,
    "copied_pnl": -0.46
   },
   {
@@ -74,7 +74,7 @@
    "drop_hold_until": 1794985200,
    "reinstated": "Terry 2026-11-15: reinstated after auto-drop (10 trades, -$12.55) so the Tue Nov 17 recheck evaluates it on full data; auto-drop suspended until 2026-11-18 00:00 MST",
    "added_ts": 1792500604,
-   "watermark": 1794732956,
+   "watermark": 1794743021,
    "eval": {
     "source": "Poly2 scoring (vendored score.py) + Gamma-validated cash-flow accounting, 2026-10-20",
     "poly2_composite": 72.73,
@@ -93,7 +93,7 @@
     "pct_buys_ge_090": 0.01,
     "sell_buy_ratio": 0.02
    },
-   "copied_trades": 11,
+   "copied_trades": 12,
    "copied_pnl": -13.44
   }
  ]
