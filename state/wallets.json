@@ -58,14 +58,14 @@
    "drop_hold_until": 1794985200,
    "reinstated": "Terry 2026-11-15: reinstated after auto-drop (10 trades, -$0.46); same hold as PEYZ \u2014 auto-drop suspended until 2026-11-18 00:00 MST so the Tue Nov 17 recheck evaluates the full roster",
    "added_ts": 1792016496,
-   "watermark": 1794897140,
+   "watermark": 1794903754,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
     "redeems_30d": 92,
     "pnl_alltime": 68799.0
    },
-   "copied_trades": 17,
+   "copied_trades": 20,
    "copied_pnl": 8.09
   },
   {
@@ -76,7 +76,7 @@
    "drop_hold_until": 1794985200,
    "reinstated": "Terry 2026-11-15: reinstated after auto-drop (10 trades, -$12.55) so the Tue Nov 17 recheck evaluates it on full data; auto-drop suspended until 2026-11-18 00:00 MST",
    "added_ts": 1792500604,
-   "watermark": 1794896243,
+   "watermark": 1794901282,
    "eval": {
     "source": "Poly2 scoring (vendored score.py) + Gamma-validated cash-flow accounting, 2026-10-20",
     "poly2_composite": 72.73,
