@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1795182583,
+   "watermark": 1795186136,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -66,7 +66,7 @@
     "pnl_alltime": 68799.0
    },
    "copied_trades": 40,
-   "copied_pnl": 30.18
+   "copied_pnl": 25.12
   },
   {
    "address": "0xdaef2be2a19ad331737d06545f85615b094554e9",
