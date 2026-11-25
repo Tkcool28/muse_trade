@@ -6,7 +6,7 @@
    "style": "soccer combo parlays (daily)",
    "status": "active",
    "added_ts": 1792016496,
-   "watermark": 1795595821,
+   "watermark": 1795619854,
    "eval": {
     "trades_30d": 366,
     "median_hold_d": 0.4,
@@ -58,15 +58,15 @@
    "drop_hold_until": 1794985200,
    "reinstated": "Terry 2026-11-15: reinstated after auto-drop (10 trades, -$0.46); same hold as PEYZ \u2014 auto-drop suspended until 2026-11-18 00:00 MST so the Tue Nov 17 recheck evaluates the full roster",
    "added_ts": 1792016496,
-   "watermark": 1795567502,
+   "watermark": 1795619911,
    "eval": {
     "trades_30d": 296,
     "median_hold_d": 4.2,
     "redeems_30d": 92,
     "pnl_alltime": 68799.0
    },
-   "copied_trades": 59,
-   "copied_pnl": 55.64
+   "copied_trades": 63,
+   "copied_pnl": 45.38
   },
   {
    "address": "0xdaef2be2a19ad331737d06545f85615b094554e9",
